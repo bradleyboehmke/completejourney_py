@@ -307,3 +307,114 @@ promotions.to_csv("/Users/b294776/Desktop/Workspace/Packages/completejourney_py/
 
 campaign_descriptions = pd.read_csv('/Users/b294776/Desktop/Workspace/Data sets/Complete_Journey_UV_Version/campaign_desc.csv')
 
+campaign_descriptions.rename(columns={
+    'campaign': 'campaign_id',
+    'start_day': 'start_date',
+    'end_day': 'end_date'
+}, inplace=True)
+
+campaign_descriptions['campaign_id'] = campaign_descriptions['campaign_id'].astype(str)
+
+campaign_descriptions['description'].replace('(Type)(A|B|C)', '\\1 \\2', inplace=True, regex=True)
+campaign_descriptions['description'] = campaign_descriptions['description'].astype('category', categories=['Type A', 'Type B', 'Type C'])
+
+# convert start_date and end_date to a real date variable
+start_temp = campaign_descriptions['start_date'].apply(lambda x: pd.Timedelta(x - 285, unit='D'))
+campaign_descriptions['start_date'] = pd.to_datetime(date(year=2017, month=1, day=1)) + start_temp
+
+end_temp = campaign_descriptions['end_date'].apply(lambda x: pd.Timedelta(x - 285, unit='D'))
+campaign_descriptions['end_date'] = pd.to_datetime(date(year=2017, month=1, day=1)) + end_temp
+
+cond = (campaign_descriptions['start_date'].dt.year == 2017) | (campaign_descriptions['end_date'].dt.year == 2017)
+campaign_descriptions = campaign_descriptions[cond].reset_index(drop=True)
+
+campaign_descriptions.rename(columns={'description': 'campaign_type'}, inplace=True)
+
+# organize and sort final dataframe
+campaign_descriptions = campaign_descriptions[['campaign_id', 'campaign_type', 'start_date', 'end_date']]
+campaign_descriptions['campaign_id'] = campaign_descriptions['campaign_id'].astype(int)
+campaign_descriptions.sort_values('campaign_id', inplace=True)
+campaign_descriptions['campaign_id'] = campaign_descriptions['campaign_id'].astype(str)
+campaign_descriptions.reset_index(drop=True, inplace=True)
+
+
+# campaigns --------------------------------------------------------------------
+
+campaigns = pd.read_csv('/Users/b294776/Desktop/Workspace/Data sets/Complete_Journey_UV_Version/campaign_table.csv')
+
+campaigns.rename(columns={
+    'campaign': 'campaign_id',
+    'household_key': 'household_id'
+}, inplace=True)
+
+# remove any campaigns that did not occur in 2017
+campaigns = campaigns[campaigns['campaign_id'].isin(campaign_descriptions['campaign_id'].unique())]
+
+# organize final dataset
+campaigns = campaigns[['campaign_id', 'household_id']]
+campaigns.sort_values(['campaign_id', 'household_id'], inplace=True)
+
+# convert the id variables to characters
+for col in campaigns.columns:
+    if '_id' in col:
+        campaigns[col] = campaigns[col].astype(str)
+
+campaigns.reset_index(drop=True, inplace=True)
+
+
+# coupons ----------------------------------------------------------------------
+
+coupons = pd.read_csv('/Users/b294776/Desktop/Workspace/Data sets/Complete_Journey_UV_Version/coupon.csv')
+coupons.rename(columns={'campaign': 'campaign_id'}, inplace=True)
+coupons = coupons[coupons['campaign_id'].isin(campaign_descriptions['campaign_id'])]
+coupons.sort_values(['coupon_upc', 'product_id'], inplace=True)
+coupons = coupons.astype(str)
+coupons.reset_index(drop=True, inplace=True)
+
+
+# coupon_redemptions -----------------------------------------------------------
+
+coupon_redemptions = pd.read_csv('/Users/b294776/Desktop/Workspace/Data sets/Complete_Journey_UV_Version/coupon_redempt.csv')
+
+coupon_redemptions.rename(columns={
+    'household_key': 'household_id',
+    'campaign': 'campaign_id'
+}, inplace=True)
+
+for col in coupon_redemptions.columns:
+    if '_' in col:
+        coupon_redemptions[col] = coupon_redemptions[col].astype(str)
+
+# make sure we match those campaigns in the campaign descriptions data set
+coupon_redemptions = coupon_redemptions[coupon_redemptions['campaign_id'].isin(campaign_descriptions['campaign_id'])]
+
+# convert redemption_date to a real date variable
+start_temp = coupon_redemptions['day'].apply(lambda x: pd.Timedelta(x - 285, unit='D'))
+coupon_redemptions['redemption_date'] = pd.to_datetime(date(year=2017, month=1, day=1)) + start_temp
+
+# remove any campaigns that did not occur in 2017
+coupon_redemptions = coupon_redemptions[coupon_redemptions['redemption_date'].dt.year == 2017]
+
+coupon_redemptions = coupon_redemptions[['household_id', 'coupon_upc', 'campaign_id', 'redemption_date']]
+coupon_redemptions.sort_values('redemption_date', inplace=True)
+coupon_redemptions.reset_index(drop=True, inplace=True)
+
+
+# Reformat campaign ID so they are 1-27 -----------------------------------
+
+old_values = list(campaign_descriptions['campaign_id'].unique())
+new_values = [str(x) for x in range(1, 28)]
+campaign_id_mapping = dict(zip(old_values, new_values))
+
+data_dict = {
+    'campaign_descriptions': campaign_descriptions,
+    'campaigns': campaigns,
+    'coupons': coupons,
+    'coupon_redemptions': coupon_redemptions
+}
+
+for df in data_dict:
+    data = data_dict[df]
+    data['campaign_id'].replace(campaign_id_mapping, inplace=True)
+    data.to_csv(f"/Users/b294776/Desktop/Workspace/Packages/completejourney_py/completejourney/data/{df}.csv.gz",
+        index=False, compression='gzip')
