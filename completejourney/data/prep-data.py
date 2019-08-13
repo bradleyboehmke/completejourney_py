@@ -184,3 +184,88 @@ demographics = demographics[cols]
 # save final data set
 demographics.to_csv("/Users/b294776/Desktop/Workspace/Packages/completejourney_py/completejourney/data/demographics.csv.gz",
                     index=False, compression='gzip')
+
+
+# products ---------------------------------------------------------------------
+
+products = pd.read_csv('/Users/b294776/Desktop/Workspace/Data sets/Complete_Journey_UV_Version/product.csv')
+
+products.rename(columns={
+    'manufacturer': 'manufacturer_id',
+    'curr_size_of_product': 'package_size',
+    'commodity_desc': 'product_category',
+    'sub_commodity_desc': 'product_type'
+}, inplace=True)
+
+# convert the id variables to characters
+for col in products.columns:
+    if '_id' in col:
+        products[col] = products[col].astype(str)
+
+products['brand'] = products['brand'].astype('category', categories=['National', 'Private'])
+
+# standardize/collapse some departments
+new_depts = {
+    'MISC. TRANS.': 'MISCELLANEOUS',
+    'MISC SALES TRAN': 'MISCELLANEOUS',
+    'VIDEO RENTAL': 'PHOTO & VIDEO',
+    'VIDEO': 'PHOTO & VIDEO',
+    'PHOTO': 'PHOTO & VIDEO',
+    'RX': 'DRUG GM',
+    'PHARMACY SUPPLY': 'DRUG GM',
+    'DAIRY DELI': 'DELI',
+    'DELI/SNACK BAR': 'DELI',
+    'PORK': 'MEAT',
+    'MEAT-WHSE': 'MEAT',
+    'GRO BAKERY': 'GROCERY',
+    'KIOSK-GAS': 'FUEL',
+    'TRAVEL & LEISUR': 'TRAVEL & LEISURE',
+    'COUP/STR & MFG': 'COUPON',
+    'HBC': 'DRUG GM'
+}
+products['department'].replace(new_depts, inplace=True)
+
+# fix as many product size descriptions as possible
+products['package_size'].replace('CANS$', 'CAN', regex=True, inplace=True)
+products['package_size'].replace('COUNT$', 'CT', regex=True, inplace=True)
+products['package_size'].replace('DOZEN$', 'DZ', regex=True, inplace=True)
+products['package_size'].replace('FEET$', 'FT', regex=True, inplace=True)
+products['package_size'].replace('FLOZ', 'FL OZ', regex=True, inplace=True)
+products['package_size'].replace('GALLON$', 'GAL', regex=True, inplace=True)
+products['package_size'].replace('(\\d)(\\s*)GL$', '\\1 GAL', regex=True, inplace=True)
+products['package_size'].replace('(\\d)(\\s*)(GRAM)(S*)', '\\1 G', regex=True, inplace=True)
+products['package_size'].replace('INCH', 'IN', regex=True, inplace=True)
+products['package_size'].replace('(\\d)(\\s*)(LIT$|LITRE|LITERS|LITER|LTR)', '\\1 L', regex=True, inplace=True)
+products['package_size'].replace('(OUNCE|OZ\\.)', 'OZ', regex=True, inplace=True)
+products['package_size'].replace('(PACK|PKT)', 'PK', regex=True, inplace=True)
+products['package_size'].replace('PIECE', 'PC', regex=True, inplace=True)
+products['package_size'].replace('PINT', 'PT', regex=True, inplace=True)
+products['package_size'].replace('(POUND|POUNDS|LBS|LB\\.)', 'LB', regex=True, inplace=True)
+products['package_size'].replace('QUART', 'QT', regex=True, inplace=True)
+products['package_size'].replace('SQFT', 'SQ FT', regex=True, inplace=True)
+products['package_size'].replace('^(\\*|\\+|@|:|\\)|-)', '', regex=True, inplace=True)
+products['package_size'].replace('(\\d)([A-Za-z]+)', '\\1 \\2', regex=True, inplace=True)
+products['package_size'] = products['package_size'].str.strip()
+
+# fix product types
+products['product_type'].replace('\\*ATTERIES', 'BATTERIES', regex=True, inplace=True)
+products['product_type'].replace('\\*ATH', 'BATH', regex=True, inplace=True)
+products['product_type'].replace('^\\*', '', regex=True, inplace=True)
+
+# remove these strange cases
+cond1 = products['product_category'] != '(CORP USE ONLY)'
+cond2 = products['product_category'] != 'MISCELLANEOUS(CORP USE ONLY)'
+cond3 = products['product_type'] != 'CORPORATE DELETES (DO NOT USE'
+products = products[cond1 & cond2 & cond3]
+
+# how can we deal with cases where product_category == "UNKNOWN",
+# but product_type != "UNKNOWN", and values of NA? (ignore for now)
+products.replace('(UNKNOWN)|(NO COMMODITY DESCRIPTION)|(NO SUBCOMMODITY DESCRIPTION)|(NO-NONSENSE)', np.nan, regex=True, inplace=True)
+
+# reorder the variables
+cols = ['product_id', 'manufacturer_id', 'department', 'brand', 'product_category', 'product_type', 'package_size']
+products = products[cols]
+
+# save final data set
+products.to_csv("/Users/b294776/Desktop/Workspace/Packages/completejourney_py/completejourney/data/products.csv.gz",
+                    index=False, compression='gzip')

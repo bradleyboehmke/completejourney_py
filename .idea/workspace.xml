@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f1977afb-adad-42ae-abc5-59575a5fd217" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/completejourney/data/prep-data.py" beforeDir="false" afterPath="$PROJECT_DIR$/completejourney/data/prep-data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,8 +42,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/completejourney/data/prep-data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="673">
-              <caret line="186" column="52" selection-start-line="186" selection-start-column="52" selection-end-line="186" selection-end-column="52" />
+            <state relative-caret-position="675">
+              <caret line="271" lean-forward="true" selection-start-line="271" selection-end-line="271" />
               <folding>
                 <element signature="e#65#84#0" expanded="true" />
               </folding>
@@ -54,7 +55,7 @@
         <entry file="file://$PROJECT_DIR$/completejourney/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="135">
-              <caret line="9" column="5" lean-forward="true" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
+              <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -82,10 +83,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="673" />
-    <option name="y" value="98" />
-    <option name="width" value="2087" />
-    <option name="height" value="1300" />
+    <option name="x" value="676" />
+    <option name="y" value="58" />
+    <option name="width" value="1535" />
+    <option name="height" value="1302" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -146,24 +147,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1565620782029</updated>
-      <workItem from="1565620784411" duration="17072000" />
+      <workItem from="1565620784411" duration="27420000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17072000" />
+    <option name="totallyTimeSpent" value="27420000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1419" y="109" width="2087" height="1300" extended-state="0" />
+    <frame x="676" y="58" width="1535" height="1302" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18728606" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25653046" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" />
       <window_info anchor="bottom" id="Version Control" />
-      <window_info active="true" anchor="bottom" id="Python Console" visible="true" weight="0.3294702" />
+      <window_info active="true" anchor="bottom" id="Python Console" visible="true" weight="0.3289256" />
       <window_info anchor="bottom" id="Terminal" weight="0.3294702" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -207,14 +208,14 @@
     <entry file="file://$PROJECT_DIR$/completejourney/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
-          <caret line="9" column="5" lean-forward="true" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
+          <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/completejourney/data/prep-data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="673">
-          <caret line="186" column="52" selection-start-line="186" selection-start-column="52" selection-end-line="186" selection-end-column="52" />
+        <state relative-caret-position="675">
+          <caret line="271" lean-forward="true" selection-start-line="271" selection-end-line="271" />
           <folding>
             <element signature="e#65#84#0" expanded="true" />
           </folding>
