@@ -269,3 +269,41 @@ products = products[cols]
 # save final data set
 products.to_csv("/Users/b294776/Desktop/Workspace/Packages/completejourney_py/completejourney/data/products.csv.gz",
                     index=False, compression='gzip')
+
+
+# promotions -----------------------------------------------------------------
+
+promotions = pd.read_csv('/Users/b294776/Desktop/Workspace/Data sets/Complete_Journey_UV_Version/causal_data.csv')
+
+for col in promotions.columns:
+    if '_id' in col:
+        promotions[col] = promotions[col].astype(str)
+
+promotions['display'] = promotions['display'].astype('category')
+promotions['mailer'] = promotions['mailer'].astype('category')
+promotions['week'] = promotions['week_no'] - 40
+
+# only select data from 2017
+promotions = promotions[promotions['week'].isin(transactions['week'].unique())]
+
+# sort by week first, since that is helpful to understand
+promotions.sort_values(['week', 'product_id', 'store_id'], inplace=True)
+
+# re-name and re-arrange final data frame
+promotions.rename(columns={
+    'display': 'display_location',
+    'mailer': 'mailer_location'
+}, inplace=True)
+
+cols = ['product_id', 'store_id', 'display_location', 'mailer_location', 'week']
+promotions = promotions[cols]
+
+# save final data set
+promotions.to_csv("/Users/b294776/Desktop/Workspace/Packages/completejourney_py/completejourney/data/promotions.csv.gz",
+                    index=False, compression='gzip')
+
+
+# campaign_descriptions --------------------------------------------------------
+
+campaign_descriptions = pd.read_csv('/Users/b294776/Desktop/Workspace/Data sets/Complete_Journey_UV_Version/campaign_desc.csv')
+
